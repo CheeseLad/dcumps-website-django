@@ -10,19 +10,24 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <meta name="description" content="DCU Media Production Society is home to DCUtv, DCUfm & The College View. We take pride in producing Ireland’s best student-media! Love Media? Love MPS!">
   <meta name='keywords' content='dcu, dcumps, mps, dcufm, dcutv, thecollegeview, mediaproduction, ireland'>
-  <meta name='og:url' content='https://www.dcumps.ie'>
-  <meta name='og:image' content="{% static 'icons/android-chrome-512x512.png' %}">
-  <meta name='og:site_name' content='{{ page_name }} | DCUMPS'>
-  <meta name='og:description' content='DCU Media Production Society is home to DCUtv, DCUfm & The College View. We take pride in producing Ireland’s best student-media! Love Media? Love MPS!'>
+  <meta property='og:type' content='website'>
+  <meta property='og:url' content='https://www.dcumps.ie'>
+  <meta property='og:title' content='{{ page_name }} | DCU MPS'>
+  <meta property='og:site_name' content='DCU MPS'>
+  <meta property='og:image' content="{% static 'icons/android-chrome-512x512.png' %}">
+  <meta property='og:description' content='DCU Media Production Society is home to DCUtv, DCUfm & The College View. We take pride in producing Ireland’s best student-media! Love Media? Love MPS!'>
+  <link rel="canonical" href="{{ request.build_absolute_uri }}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ page_name }} | DCU MPS">
+  <meta name="twitter:description" content="DCU Media Production Society is home to DCUtv, DCUfm & The College View. We take pride in producing Ireland’s best student-media! Love Media? Love MPS!">
+  <meta name="twitter:image" content="{% static 'icons/android-chrome-512x512.png' %}">
   <meta name='apple-mobile-web-app-status-bar-style' content='black-translucent'>
   <script defer data-domain="dcumps.ie" src="https://pa.redbrick.dcu.ie/js/script.js"></script>
   <title>{{ page_name }} | DCU MPS</title>
-  <favicon>
-    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'icons/apple-touch-icon.png' %}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'icons/favicon-32x32.png' %}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'icons/favicon-16x16.png' %}">
-    <link rel="manifest" href="{% static 'icons/site.webmanifest' %}">
-  </favicon>
+  <link rel="apple-touch-icon" sizes="180x180" href="{% static 'icons/apple-touch-icon.png' %}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{% static 'icons/favicon-32x32.png' %}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{% static 'icons/favicon-16x16.png' %}">
+  <link rel="manifest" href="{% static 'icons/site.webmanifest' %}">
   <style>
 body {
   background-image: linear-gradient(to right, #202E4E, rgb(20, 37, 59)) !important;
@@ -80,47 +85,47 @@ body {
     <header class="header">
       <nav class="navbar navbar-expand-xl navbar-light">
         <div class="container-fluid">
-          <img id="clickImage" src="{% static 'assets/img/other/MPS_WideLogo_WHT.png' %}" onclick="checkClicks()" width="200" height="75" class="d-inline-block align-top" alt="" style="margin-left: 15px; cursor: pointer;">
+          <img id="clickImage" src="{% static 'assets/img/other/MPS_WideLogo_WHT.png' %}" onclick="checkClicks()" width="200" height="75" class="d-inline-block align-top" alt="DCU Media Production Society logo" style="margin-left: 15px; cursor: pointer;">
           <audio id="clickSound" src="{% static 'assets/ping.mp3' %}"></audio>
           <audio id="clickSound2" src="{% static 'assets/secret.mp3' %}"></audio>
           <button class="navbar-toggler" aria-label="Mobile Navigation Drawer" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"><span class="navbar-toggler-icon"></span></button>
         <div class="collapse navbar-collapse top_nav" id="navbarSupportedContent">
           <ul class="navbar-nav ml-auto custom-nav">
               <li class="nav-item">
-                <a class="nav-link" href="/">Home</a>
+                <a class="nav-link" href="/" {% if request.path == '/' %}aria-current="page"{% endif %}>Home</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/history">History</a>
+                <a class="nav-link" href="/history" {% if request.path == '/history' %}aria-current="page"{% endif %}>History</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/blog">Blog</a>
+                <a class="nav-link" href="/blog" {% if request.path|slice:":5" == '/blog' %}aria-current="page"{% endif %}>Blog</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/dcufm">DCUfm</a>
+                <a class="nav-link" href="/dcufm" {% if request.path|slice:":6" == '/dcufm' %}aria-current="page"{% endif %}>DCUfm</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/dcutv">DCUtv</a>
+                <a class="nav-link" href="/dcutv" {% if request.path|slice:":6" == '/dcutv' %}aria-current="page"{% endif %}>DCUtv</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/loans">Loans</a>
+                <a class="nav-link" href="/loans" {% if request.path|slice:":6" == '/loans' %}aria-current="page"{% endif %}>Loans</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/thecollegeview">TCV</a>
+                <a class="nav-link" href="/thecollegeview" {% if request.path == '/thecollegeview' %}aria-current="page"{% endif %}>TCV</a>
               </li>
               <li>
-                <a class="nav-link" href="/thedev">The Dev</a>
+                <a class="nav-link" href="/thedev" {% if request.path == '/thedev' %}aria-current="page"{% endif %}>The Dev</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/gallery">Gallery</a>
+                <a class="nav-link" href="/gallery" {% if request.path|slice:":8" == '/gallery' %}aria-current="page"{% endif %}>Gallery</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/committee">Committee</a>
+                <a class="nav-link" href="/committee" {% if request.path|slice:":10" == '/committee' %}aria-current="page"{% endif %}>Committee</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/contact">Contact</a>
+                <a class="nav-link" href="/contact" {% if request.path == '/contact' %}aria-current="page"{% endif %}>Contact</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="https://dcuclubsandsocs.ie/society/media-production" target="_blank">Join</a>
+                <a class="nav-link" href="https://dcuclubsandsocs.ie/society/media-production" target="_blank" rel="noopener noreferrer">Join</a>
               </li>
           </ul>
         </div>
@@ -135,13 +140,13 @@ body {
       <div class="footer">
         <div class="footer-line"></div>
         <ul>
-          <li><a href="http://facebook.com/dcumps" target="_blank" aria-label="DCU MPS Facebook"><i class="fa-brands fa-facebook"></i></a></li>
-          <li><a href="http://twitter.com/dcumps" target="_blank" aria-label="DCU MPS Twitter"><i class="fa-brands fa-x-twitter"></i></a></li>
-          <li><a href="http://instagram.com/dcumps" target="_blank" aria-label="DCU MPS Instagram"><i class="fa-brands fa-instagram"></i></a></li>
-          <li><a href="http://youtube.com/dcumps" target="_blank" aria-label="DCU MPS YouTube"><i class="fa-brands fa-youtube"></i></a></li>
-          <li><a href="https://www.tiktok.com/@dcumps" target="_blank" aria-label="DCU MPS TikTok"><i class="fa-brands fa-tiktok"></i></a></li>
+          <li><a href="http://facebook.com/dcumps" target="_blank" rel="noopener noreferrer" aria-label="DCU MPS Facebook"><i class="fa-brands fa-facebook"></i></a></li>
+          <li><a href="http://twitter.com/dcumps" target="_blank" rel="noopener noreferrer" aria-label="DCU MPS Twitter"><i class="fa-brands fa-x-twitter"></i></a></li>
+          <li><a href="http://instagram.com/dcumps" target="_blank" rel="noopener noreferrer" aria-label="DCU MPS Instagram"><i class="fa-brands fa-instagram"></i></a></li>
+          <li><a href="http://youtube.com/dcumps" target="_blank" rel="noopener noreferrer" aria-label="DCU MPS YouTube"><i class="fa-brands fa-youtube"></i></a></li>
+          <li><a href="https://www.tiktok.com/@dcumps" target="_blank" rel="noopener noreferrer" aria-label="DCU MPS TikTok"><i class="fa-brands fa-tiktok"></i></a></li>
         </ul>
-        <p>© 1985 - {% now "Y" %} by DCU MPS. Designed and maintained by <a href="https://www.jakefarrell.ie" target="_blank"><strong>Jake Farrell</strong></a></p>
+        <p>© 1985 - {% now "Y" %} by DCU MPS. Designed and maintained by <a href="https://www.jakefarrell.ie" target="_blank" rel="noopener noreferrer"><strong>Jake Farrell</strong></a></p>
         <!--<p>Powered with ❤️ by <a href="https://redbrick.dcu.ie" target="_blank"><strong>Redbrick</strong></a></p>-->
       </div>
     </footer>
