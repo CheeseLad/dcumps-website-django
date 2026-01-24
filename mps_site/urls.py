@@ -1,10 +1,8 @@
-from django.contrib import admin
-from django.urls import include, path
+from django.urls import path
 from . import views
 from .views import *
 from django.views.generic.base import TemplateView
 from django.views.generic import RedirectView
-import re
 from django.conf import settings
 
 urlpatterns = [

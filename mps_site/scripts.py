@@ -3,7 +3,6 @@ import feedparser
 import yt_dlp as youtube_dl
 import requests
 from bs4 import BeautifulSoup
-import json
 import pandas as pd
 import re
 

@@ -1,8 +1,6 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
+from django.shortcuts import render, get_object_or_404
 from .models import *
 from .scripts import *
-import json
 from django.utils.safestring import mark_safe
 from datetime import datetime
 import markdown
@@ -14,7 +12,8 @@ from .data.thecollegeview import *
 from .data.committee import *
 from .data.loans import *
 from .data.history import *
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor
+import os
 
 def ordinal(n):
     if 10 <= n % 100 <= 20:
@@ -29,11 +28,12 @@ def format_event_date(date_str):
     return date_obj.strftime(f"%a {day} %b at %H:%M")
 
 def index(request):
-        video = get_latest_video_id("https://www.youtube.com/feeds/videos.xml?channel_id=UCEnLsvcq1eFkSFFAIqBDgUw")
+        youtube_channel_id = os.getenv('YOUTUBE_CHANNEL_ID')
+        video = get_latest_video_id(f"https://www.youtube.com/feeds/videos.xml?channel_id={youtube_channel_id}")
         posts = tcv_posts("https://thecollegeview.ie/wp-json/wp/v2/posts?per_page=3&orderby=date&_fields=id,date,title,content,link,author,featured_media")
         previous, current, next_show = get_date_time()
         try:
-            events = requests.get("https://clubsandsocs.jakefarrell.ie/dcuclubsandsocs.ie/society/media-production/events").json()
+            events = requests.get(os.getenv('CLUBS_SOCS_API_URL')).json()
         except requests.exceptions.RequestException as e:
             events = []
             print(f"Error fetching events: {e}")
@@ -123,11 +123,12 @@ def dcutv(request):
     donation_data = get_donation_count()
     current_donation_amount = donation_data["totalRaised"]
     goal_amount = donation_data["targetAmount"]
+    youtube_channel_id = os.getenv('YOUTUBE_CHANNEL_ID')
     return render(request, 'dcutv.html', 
                   {'page_name': 'DCUtv', 
                    'tv_thursday' : 'RON9_ByY190', 
-                   'latest_video_id' : get_latest_video_id("https://www.youtube.com/feeds/videos.xml?channel_id=UCEnLsvcq1eFkSFFAIqBDgUw"), 
-                   'most_recent_videos': get_latest_video_ids("https://www.youtube.com/feeds/videos.xml?channel_id=UCEnLsvcq1eFkSFFAIqBDgUw"), 
+                   'latest_video_id' : get_latest_video_id(f"https://www.youtube.com/feeds/videos.xml?channel_id={youtube_channel_id}"), 
+                   'most_recent_videos': get_latest_video_ids(f"https://www.youtube.com/feeds/videos.xml?channel_id={youtube_channel_id}"), 
                    'tv_managers': tv_managers,
                    'dcutv_carousel': dcutv_carousel, 
                    'stats_data': dcutv_stats_data,
@@ -177,27 +178,32 @@ def page_not_found(request):
     return render(request, '404.html', {'page_name': '404'})
 
 def links(request):
-    sheet_url = "https://docs.google.com/spreadsheets/d/1FdtqA7a0sJcs24NIYWQnOOxrUiNLf1YvwUsWhZ1feLw/edit?usp=sharing"
+    sheet_id = os.getenv('LINKTREE_MAIN_SHEET_ID')
+    sheet_url = f"https://docs.google.com/spreadsheets/d/{sheet_id}/edit?usp=sharing"
     linktree = process_linktree_data(sheet_url)
     return render(request, 'links.html', {'page_name': 'Links', 'linktree': linktree})
 
 def links_tv(request):
-    sheet_url = "https://docs.google.com/spreadsheets/d/1VP371L8_fwkd1CUE-1L-j01mVwlZaCqcmAZKfGTvZaY/edit?usp=sharing"
+    sheet_id = os.getenv('LINKTREE_TV_SHEET_ID')
+    sheet_url = f"https://docs.google.com/spreadsheets/d/{sheet_id}/edit?usp=sharing"
     linktree = process_linktree_data(sheet_url)
     return render(request, 'links.html', {'page_name': 'DCUtv Links', 'linktree': linktree})
 
 def links_fm(request):
-    sheet_url = "https://docs.google.com/spreadsheets/d/1LnPc8wIwyFr09Wiko6myMCbq-9sTApt9URh-nqw2i0A/edit?usp=sharing"
+    sheet_id = os.getenv('LINKTREE_FM_SHEET_ID')
+    sheet_url = f"https://docs.google.com/spreadsheets/d/{sheet_id}/edit?usp=sharing"
     linktree = process_linktree_data(sheet_url)
     return render(request, 'links.html', {'page_name': 'DCUfm Links', 'linktree': linktree})
 
 def links_tcv(request):
-    sheet_url = "https://docs.google.com/spreadsheets/d/1ssVVGWg9nvUxxmLXQwC_-T2XWxuqGfYDSLp5T4S-e9I/edit?usp=sharing"
+    sheet_id = os.getenv('LINKTREE_TCV_SHEET_ID')
+    sheet_url = f"https://docs.google.com/spreadsheets/d/{sheet_id}/edit?usp=sharing"
     linktree = process_linktree_data(sheet_url)
     return render(request, 'links.html', {'page_name': 'The College View Links', 'linktree': linktree})
 
 def links_dev(request):
-    sheet_url = "https://docs.google.com/spreadsheets/d/1DhR09FjdZL2sNkYrPAm18dZOL6hhmmGtBrwbWWD0swQ/edit?usp=sharing"
+    sheet_id = os.getenv('LINKTREE_DEV_SHEET_ID')
+    sheet_url = f"https://docs.google.com/spreadsheets/d/{sheet_id}/edit?usp=sharing"
     linktree = process_linktree_data(sheet_url)
     return render(request, 'links.html', {'page_name': 'The Dev Links', 'linktree': linktree})
 
