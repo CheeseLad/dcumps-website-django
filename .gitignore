@@ -1,6 +1,4 @@
 *.pyc
 migrations/
-old
-staticfiles
+__pycache__/
 *.env
-files
