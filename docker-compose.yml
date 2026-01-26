@@ -1,10 +1,10 @@
 services:
   dcumps-website:
-    build: .
+    image: ghcr.io/cheeselad/dcumps-website-django:latest
     container_name: dcumps-website
     restart: unless-stopped
     ports:
-      - "5637:8000"
+      - "3020:8000"
     environment:
       # Django Settings
       - DEBUG=${DEBUG}
@@ -23,4 +23,9 @@ services:
       - LINKTREE_FM_SHEET_ID=${LINKTREE_FM_SHEET_ID}
       - LINKTREE_TCV_SHEET_ID=${LINKTREE_TCV_SHEET_ID}
       - LINKTREE_DEV_SHEET_ID=${LINKTREE_DEV_SHEET_ID}
+    networks:
+      - cheeselab
 
+networks:
+  cheeselab:
+    external: true
