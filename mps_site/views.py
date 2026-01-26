@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from .models import *
 from .scripts import *
 from django.utils.safestring import mark_safe
-from datetime import datetime
+from datetime import datetime, timezone
 import markdown
 from .utils import *
 from .data.homepage import *
@@ -14,6 +14,10 @@ from .data.loans import *
 from .data.history import *
 from concurrent.futures import ThreadPoolExecutor
 import os
+import requests
+import pytz
+import markdown
+import json
 
 def ordinal(n):
     if 10 <= n % 100 <= 20:
@@ -23,9 +27,19 @@ def ordinal(n):
     return f"{n}{suffix}"
 
 def format_event_date(date_str):
-    date_obj = datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%S")
-    day = ordinal(date_obj.day)
-    return date_obj.strftime(f"%a {day} %b at %H:%M")
+    try:
+        date_obj = datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%SZ")
+        date_obj = date_obj.replace(tzinfo=timezone.utc)
+    except ValueError:
+        date_obj = datetime.fromisoformat(date_str.replace('Z', '+00:00'))
+        if date_obj.tzinfo is None:
+            date_obj = date_obj.replace(tzinfo=timezone.utc)
+
+    dublin_tz = pytz.timezone("Europe/Dublin")
+    local_date = date_obj.astimezone(dublin_tz)
+
+    day = ordinal(local_date.day)
+    return local_date.strftime(f"%a {day} %b at %H:%M")
 
 def index(request):
         youtube_channel_id = os.getenv('YOUTUBE_CHANNEL_ID')
