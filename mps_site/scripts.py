@@ -5,6 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 import re
+import os
 
 
 def construct_tcv_url(per_page=3, category=None):
@@ -15,11 +16,26 @@ def construct_tcv_url(per_page=3, category=None):
     return base_url + query_params
 
 
-def fetch_data(url):
+def fetch_data(url, username=None, password=None):
     try:
-        response = requests.get(url, timeout=10)
+        username = username or os.getenv("WP_API_USERNAME")
+        password = password or os.getenv("WP_API_PASSWORD")
+        auth = (username, password) if username and password else None
+        response = requests.get(url, timeout=10, auth=auth)
         response.raise_for_status()
         return response.json()
+    except requests.exceptions.HTTPError as e:
+        # If auth is rejected for a public endpoint, retry without credentials.
+        if e.response is not None and e.response.status_code == 401 and auth:
+            try:
+                response = requests.get(url, timeout=10)
+                response.raise_for_status()
+                return response.json()
+            except requests.exceptions.RequestException as retry_error:
+                print(f"An error occurred: {retry_error}")
+                return None
+        print(f"An error occurred: {e}")
+        return None
     except requests.exceptions.RequestException as e:
         print(f"An error occurred: {e}")
         return None
@@ -189,7 +205,7 @@ def get_most_popular_video_ids(channel_url, n=9):
 
 
 def get_donation_count():
-    URL = "https://www.idonate.ie/fundraiser/MediaProductionSociety14"
+    URL = "https://www.idonate.ie/fundraiser/MediaProductionSociety1"
     headers = {
         'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/119.0"}
 
