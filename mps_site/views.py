@@ -47,8 +47,8 @@ def index(request):
         posts = tcv_posts("https://thecollegeview.ie/wp-json/wp/v2/posts?per_page=3&orderby=date&_fields=id,date,title,content,link,author,featured_media")
         previous, current, next_show = get_date_time()
         try:
-            events = requests.get(os.getenv('CLUBS_SOCS_API_URL')).json()
-        except requests.exceptions.RequestException as e:
+            events = requests.get(os.getenv('CLUBS_SOCS_API_URL'), timeout=10).json()
+        except (requests.exceptions.RequestException, requests.exceptions.Timeout, ValueError) as e:
             events = []
             print(f"Error fetching events: {e}")
         donation_data = get_donation_count()
